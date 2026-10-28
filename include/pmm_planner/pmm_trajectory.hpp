@@ -9,7 +9,7 @@
 
 #pragma once
 #include <cmath>
-#include "common.hpp"
+#include <pmm_planner/common.hpp>
 
 #define PRECISION_PMM_VALUES (1.0e-8)
 #define PRECISION_DTDV_DEF (1e-4)

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "pmm_trajectory3d.hpp"
-#include "common.hpp"
+#include <pmm_planner/pmm_trajectory3d.hpp>
+#include <pmm_planner/common.hpp>
 #include <iostream>
 #include <fstream>
 

@@ -6,7 +6,7 @@
  * 
  */
 
-#include "pmm_trajectory.hpp"
+#include <pmm_planner/pmm_trajectory.hpp>
 
 #include <cmath>
 #include <fstream>

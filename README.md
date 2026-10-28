@@ -1,6 +1,39 @@
+# PMM Planner for LASER
+
+ROS 2 package `pmm_planner`, based on the LASER fork of `pmm_uav_planner`
+(commit `cc34326`). The fork's current solver fixes are retained. The LASER
+boundary is provided by `pmm_planner::PmmPlanner` in
+`<pmm_planner/pmm_planner.hpp>`.
+
+## LASER integration
+
+```bash
+colcon build --packages-up-to laser_uav_managers
+```
+
+`PmmPlanner` accepts the commanded initial state and one goal or a waypoint list.
+It returns `laser_msgs/ReferenceState` samples and their relative times, supports
+mission speed limits, heading and calibrated mass, and includes the final sample.
+It owns no execution clock or controller timestep and performs no interpolation.
+`control_manager` alone samples the reference horizon for its control timestep.
+
+Vehicle parameters are in `params/<uav_type>.yaml` under the `pmm_planner` key.
+The planning launch accepts this file as `pmm_planner_file`; the backend remains
+`planner: pmm` in the planning-manager setup YAML.
+
+The upstream command-line demo remains available as `ros2 run pmm_planner main`;
+its planner/waypoint YAML files are installed under the package share `config/`.
+The original standalone `make` build continues to compile only the upstream
+solver and demo, without the ROS boundary.
+
+LASER integration code retains its BSD 3-Clause notice in `LICENSE.LASER`;
+the fork's GPL-3.0 license is retained in `LICENSE`.
+
+## Upstream algorithm, citation and standalone demo
+
 # Real-time Planning of Minimum-time Trajectories for Agile UAV Flight
 This repository contains the code for **Real-time Planning of Minimum-time Trajectories for Agile UAV Flight** presented in our [paper](https://ieeexplore.ieee.org/document/10700666).
-[![plot](./figs/video_title.png)](https://youtu.be/wArd536Amro)
+[Flight video](https://youtu.be/wArd536Amro)
 
 ## Citing
 If you use this code in an academic context, please cite the following publication:

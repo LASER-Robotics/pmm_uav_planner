@@ -6,7 +6,7 @@
  * 
  */
 
-#include "common.hpp"
+#include <pmm_planner/common.hpp>
 
 namespace pmm {
 

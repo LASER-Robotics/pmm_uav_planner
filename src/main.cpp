@@ -19,10 +19,10 @@
 #include <Eigen/Eigen>
 #include <chrono>
 
-#include "pmm_trajectory3d.hpp"
+#include <pmm_planner/pmm_trajectory3d.hpp>
 #include "yaml-cpp/yaml.h"
-#include "pmm_mg_trajectory3d.hpp"
-#include "common.hpp"
+#include <pmm_planner/pmm_mg_trajectory3d.hpp>
+#include <pmm_planner/common.hpp>
 
 using namespace pmm;
 

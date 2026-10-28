@@ -6,7 +6,7 @@
  * 
  */
 
-#include "pmm_trajectory3d.hpp"
+#include <pmm_planner/pmm_trajectory3d.hpp>
 
 #include <algorithm>
 #include <iostream>

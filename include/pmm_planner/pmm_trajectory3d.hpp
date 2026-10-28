@@ -12,8 +12,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "common.hpp"
-#include "pmm_trajectory.hpp"
+#include <pmm_planner/common.hpp>
+#include <pmm_planner/pmm_trajectory.hpp>
 
 #define CONVERGENCE_PRECISION (1E-3)
 #define TIME_PRECISION (1E-8)

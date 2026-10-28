@@ -6,7 +6,7 @@
  * 
  */
 
-#include "pmm_mg_trajectory3d.hpp"
+#include <pmm_planner/pmm_mg_trajectory3d.hpp>
 
 namespace pmm {
 
@@ -1275,7 +1275,7 @@ namespace pmm {
         }
 
         // add end configuration
-        if (t_carry != 0.){
+        if (t.empty() || t.back() < t_integrator_traj){
             t.push_back(t_integrator_traj);
             p.push_back(_p[3*(n_segments)]);
             v.push_back(_v[3*(n_segments)]);
@@ -1549,6 +1549,10 @@ namespace pmm {
 
         // export sampled trajectory
         std::ofstream outFile(output_file);
+        if (!outFile.is_open()) {
+            std::cerr << "Failed to open file: " << output_file << std::endl;
+            return;
+        }
         for (int i=0;i<t_s.size();i++) {
             outFile << t_s[i] << "," << p_s[i](0) << "," << p_s[i](1) << "," << p_s[i](2) << "," << v_s[i](0) << "," << v_s[i](1) << "," << v_s[i](2) << "," << a_s[i](0) << "," << a_s[i](1) << "," << a_s[i](2) << std::endl;
         }

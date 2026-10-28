@@ -1,44 +1,49 @@
-# Minimum version of CMake required
 cmake_minimum_required(VERSION 3.10)
+project(pmm_planner LANGUAGES CXX)
 
-# Project name and C++ standard
-project(PMM_UAV_Planner LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Set flags for compilation
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
-
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 add_definitions(-DROOT_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\")
 
-# Include directories
-include_directories(${PROJECT_SOURCE_DIR}/include /usr/include/eigen3)
+find_package(ament_cmake REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(laser_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(Threads REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
-# Source files
-set(SOURCE_FILES
-        src/pmm_mg_trajectory3d.cpp
-        src/pmm_trajectory.cpp
-        src/pmm_trajectory3d.cpp
-        src/common.cpp
+add_library(pmm_planner SHARED
+  src/pmm_mg_trajectory3d.cpp
+  src/pmm_trajectory.cpp
+  src/pmm_trajectory3d.cpp
+  src/common.cpp
+  src/pmm_planner.cpp
 )
-
-# Create executable
-add_library(${PROJECT_NAME} ${SOURCE_FILES})
-
-# Link libraries (pthread and yaml-cpp)
-target_link_libraries(${PROJECT_NAME} pthread yaml-cpp)
-
-add_executable(main
-    src/main.cpp
+target_include_directories(pmm_planner PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${EIGEN3_INCLUDE_DIRS}
 )
+ament_target_dependencies(pmm_planner PUBLIC Eigen3 laser_msgs nav_msgs)
+target_link_libraries(pmm_planner PUBLIC Threads::Threads yaml-cpp)
 
-target_link_libraries(main ${PROJECT_NAME} pthread yaml-cpp)
+add_executable(main src/main.cpp)
+target_link_libraries(main pmm_planner)
 
-# Create an object directory for compiled files
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/obj)
+install(TARGETS pmm_planner EXPORT export_pmm_planner
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+install(TARGETS main RUNTIME DESTINATION lib/${PROJECT_NAME})
+install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY params config DESTINATION share/${PROJECT_NAME})
 
-# Optional: If you have test files, you can add them here
-# For example:
-# set(TEST_FILES tests/test_pmm_mg_trajectory3d.cpp)
-# add_executable(test_${PROJECT_NAME}
+ament_export_targets(export_pmm_planner HAS_LIBRARY_TARGET)
+ament_export_include_directories(include ${EIGEN3_INCLUDE_DIRS})
+ament_export_libraries(pmm_planner)
+ament_export_dependencies(Eigen3 laser_msgs nav_msgs Threads yaml-cpp)
+ament_package()
